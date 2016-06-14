@@ -15,6 +15,7 @@ configure files either in user's home directory or `/etc`
 
 * `AndroidStudio`: start [Android Studio][] on CLI
 * `gradle`: use gradle from [Android Studio][] as default gradle
+    so gradlew is not needed any more!
 * `signapk`: signing apk with keystore
 
 ### `gradle`
