@@ -2,6 +2,8 @@
 
 GRADLE := gradle
 
+module-name = $(lastword $(subst :, ,$(1)))
+
 define GRADLE_TARGET
 # param: TARGET TASK MODULE
 ifeq (,$(strip $(3)))
@@ -11,9 +13,9 @@ $(1):
 .PHONY: $(1)
 else
 # module level target
-$(3)-$(1):
+$(call module-name,$(3))-$(1):
 	$(GRADLE) :$(3):$(2)
-.PHONY: $(3)-$(1)
+.PHONY: $(call module-name,$(3))-$(1)
 endif
 endef
 
