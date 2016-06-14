@@ -17,6 +17,10 @@ configure files either in user's home directory or `/etc`
 * `gradle`: use gradle from [Android Studio][] as default gradle
 * `signapk`: signing apk with keystore
 
+### `gradle`
+
+* `Makefile`: simple makefile for ANdroid project that use gradle
+
 [Android SDK]: https://developer.android.com/sdk/index.html
 [Android NDK]: https://developer.android.com/ndk/index.html
 [Android Studio]: https://developer.android.com/studio/index.html
