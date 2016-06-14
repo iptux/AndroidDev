@@ -1,0 +1,18 @@
+// add default repositories to all projects and build script
+allprojects {
+	repositories {
+		maven { url ANDROID_HOME + "/extras/android/m2repository" }
+		maven { url ANDROID_HOME + "/extras/google/m2repository" }
+		maven { url ANDROID_STUDIO_HOME + "/gradle/m2repository" }
+		ivy { url "${System.properties['user.home']}/.ivy2/cache" }
+		mavenLocal()
+	}
+
+	buildscript {
+		repositories {
+			maven { url ANDROID_STUDIO_HOME + "/gradle/m2repository" }
+			ivy { url "${System.properties['user.home']}/.ivy2/cache" }
+			mavenLocal()
+		}
+	}
+}

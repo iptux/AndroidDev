@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<ivysettings>
+	<!-- https://stackoverflow.com/questions/8617963/ivysettings-xml-add-local-maven-path -->
+	<settings defaultResolver="default"/>
+	<properties environment="env"/>
+
+	<property name="android.sdk.dir" value="/opt/android-sdk"/>
+	<property name="android.studio.dir" value="/opt/android-studio"/>
+
+	<property name="my-ivy-pattern" value="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]" override="false" />
+	<property name="my-m2-pattern" value="[orgPath]/[module]/[revision]/[module]-[revision].pom" override="false" />
+	<resolvers>
+		<chain name="default" returnFirst="true">
+			<filesystem name="android-sdk-extras" m2compatible="true" local="true">
+				<artifact pattern="${android.sdk.dir}/extras/android/m2repository/${my-m2-pattern}"/>
+				<ivy pattern="${android.sdk.dir}/extras/android/m2repository/${my-m2-pattern}"/>
+			</filesystem>
+			<filesystem name="android-sdk-google" m2compatible="true" local="true">
+				<artifact pattern="${android.sdk.dir}/extras/google/m2repository/${my-m2-pattern}"/>
+				<ivy pattern="${android.sdk.dir}/extras/google/m2repository/${my-m2-pattern}"/>
+			</filesystem>
+			<filesystem name="android-studio" m2compatible="true" local="true">
+				<artifact pattern="${android.studio.dir}/gradle/m2repository/${my-m2-pattern}"/>
+				<ivy pattern="${android.studio.dir}/gradle/m2repository/${my-m2-pattern}"/>
+			</filesystem>
+			<filesystem name="local-maven2" m2compatible="true">
+				<artifact pattern="${user.home}/.m2/repository/${my-ivy-pattern}"/>
+				<ivy pattern="${user.home}/.m2/repository/${my-ivy-pattern}"/>
+			</filesystem>
+			<ibiblio name="central" m2compatible="true"/>
+		</chain>
+	</resolvers>
+</ivysettings>

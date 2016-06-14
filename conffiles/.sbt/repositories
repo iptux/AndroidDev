@@ -1,0 +1,10 @@
+# WARNING: will override ALL resolvers for ALL builds
+
+# http://www.scala-sbt.org/0.13/docs/Library-Management.html#Override+all+resolvers+for+all+builds
+[repositories]
+local
+android-sdk-extras: file:/opt/android-sdk/extras/android/m2repository, [orgPath]/[module]/[revision]/[module]-[revision].pom
+android-sdk-google: file:/opt/android-sdk/extras/google/m2repository, [orgPath]/[module]/[revision]/[module]-[revision].pom
+android-studio: file:/opt/android-studio/gradle/m2repository, [orgPath]/[module]/[revision]/[module]-[revision].pom
+maven-local
+maven-central
