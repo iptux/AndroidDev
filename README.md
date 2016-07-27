@@ -20,7 +20,7 @@ configure files either in user's home directory or `/etc`
 
 ### `gradle`
 
-* `Makefile`: simple makefile for ANdroid project that use gradle
+* `Makefile`: simple makefile for Android project that use gradle
 
 [Android SDK]: https://developer.android.com/sdk/index.html
 [Android NDK]: https://developer.android.com/ndk/index.html
