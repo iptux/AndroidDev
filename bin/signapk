@@ -102,22 +102,22 @@ main() {
 	while getopts "a:hk:nt:vz:" opt ; do
 		case "${opt}" in
 		a)
-			ALIGN="${opt}"
+			ALIGN="${OPTARG}"
 			;;
 		k)
-			key="${opt}"
+			key="${OPTARG}"
 			;;
 		n)
 			ZIPALIGN=
 			;;
 		t)
-			TSAURL="${opt}"
+			TSAURL="${OPTARG}"
 			;;
 		v)
 			cert=yes
 			;;
 		z)
-			ZIPALIGN="${opt}"
+			ZIPALIGN="${OPTARG}"
 			;;
 		?)
 			showhelp
