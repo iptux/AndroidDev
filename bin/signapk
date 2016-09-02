@@ -57,6 +57,24 @@ setkeystore() {
 	[ -e "${KEYSTORE}" ] || genkeypair "${KEYSTORE}"
 }
 
+loadkeyconf() {
+	local conf="$1"
+	[ -f "${conf}" ] || return
+
+	local -A MAP
+	local key value
+	while read key value ; do
+		if [ -n "${key}" -a -n "${value}" ] ; then
+			MAP["${key}"]="${value}"
+		fi
+	done < "${conf}"
+
+	readonly KEYSTORE="${MAP[storeFile]}"
+	readonly STOREPASS="${MAP[storePassword]}"
+	readonly KEYALIAS="${MAP[keyAlias]}"
+	readonly KEYPASS="${MAP[keyPassword]}"
+}
+
 signapk() {
 	local in="$1"
 	[ -e "${in}" ] || showerror "${in}: file not exist"
@@ -106,10 +124,17 @@ Usage: `basename $0` [options...] apk
 	-v		show certificate details of a signed apk
 	-k KEYNAME	use keystore KEYNAME to sign apk
 			keystore files is stored in ${KEYSTOREDIR} directory
+	-K KEYCONF	load keystore configure from KEYCONF file
 	-t TSAURL	location of the Timestamping Authority (for jarsigner)
 	-n		DO NOT use zipalign
 	-z ZIPALIGN	path to zipalign (auto detected in \$PATH)
 	-a ALIGN	alignment in bytes (for zipalign, default 4)
+
+sample KEYCONF file:
+	storeFile KEYSTOREPATH
+	storePassword STOREPASSWORD
+	keyAlias KEYALIAS
+	keyPassword KEYPASSWORD
 EOF
 	exit
 }
@@ -118,12 +143,15 @@ main() {
 	local opt
 	local key
 	local cert
-	while getopts "a:hk:nt:vz:" opt ; do
+	while getopts "a:hk:K:nt:vz:" opt ; do
 		case "${opt}" in
 		a)
 			ALIGN="${OPTARG}"
 			;;
 		k)
+			key="${OPTARG}"
+			;;
+		K)
 			key="${OPTARG}"
 			;;
 		n)
@@ -155,7 +183,11 @@ main() {
 		exit 0
 	fi
 
-	setkeystore "${key}"
+	if [ -f "${key}" ] ; then
+		loadkeyconf "${key}"
+	else
+		setkeystore "${key}"
+	fi
 	for f in "$@" ; do
 		signapk "${f}"
 	done
