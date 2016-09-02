@@ -113,7 +113,7 @@ showcert() {
 	[ -e "${in}" ] || return 1
 
 	echo "${in}"
-	keytool -printcert -jarfile "${in}"
+	jarsigner -verify -certs "${in}"
 }
 
 showhelp() {
