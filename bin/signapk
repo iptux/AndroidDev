@@ -13,10 +13,22 @@ readonly KEYSTOREDIR=~/.android/keystore
 readonly DEFAULTKEYSTORE=cert
 
 # Timestamping Authority
-# https://timestamp.geotrust.com/tsa
-# http://timestamp.verisign.com
-# http://timestamp.digicert.com
-# https://tsa.safecreative.org/
+# some url from https://stackoverflow.com/a/25053511
+readonly -A TSAURLS=(
+	[certum]=http://time.certum.pl
+	[ncipher]=http://dse200.ncipher.com/TSS/HttpTspServer
+	[safecreative]=https://tsa.safecreative.org/
+	[dfn]=http://zeitstempel.dfn.de
+	[comodo]=http://timestamp.comodoca.com/rfc3161
+	[symantec]=http://sha256timestamp.ws.symantec.com/sha256/timestamp
+	[geotrust]=https://timestamp.geotrust.com/tsa
+	[globalsign]=http://timestamp.globalsign.com/scripts/timstamp.dll
+	[signfiles]=https://ca.signfiles.com/tsa/get.aspx
+	[globaltrustfinder]=http://services.globaltrustfinder.com/adss/tsa
+	[tugraz]=https://tsp.iaik.tugraz.at/tsp/TspRequest
+	[digicert]=http://timestamp.digicert.com
+	[verisign]=http://timestamp.verisign.com
+)
 TSAURL=
 
 ZIPALIGN="`which zipalign`"
@@ -26,6 +38,21 @@ VERBOSE=
 showerror() {
 	echo "$@" >&2
 	exit 1
+}
+
+listtsa() {
+	local key
+	printf "%20s %s\n" "TSANAME " "Timestamping Authority URL"
+	for key in "${!TSAURLS[@]}" ; do
+		printf "%20s %s\n" "${key}:" "${TSAURLS[${key}]}"
+	done
+}
+
+settsa() {
+	local tsa="${TSAURLS[$1]}"
+	if [ -n "${tsa}" ] ; then
+		TSAURL="${tsa}"
+	fi
 }
 
 genkeypair() {
@@ -127,6 +154,8 @@ Usage: `basename $0` [options...] apk
 	-k KEYNAME	use keystore KEYNAME to sign apk
 			keystore files is stored in ${KEYSTOREDIR} directory
 	-K KEYCONF	load keystore configure from KEYCONF file
+	-L		list internal Timestamping Authority urls
+	-T TSANAME	use Timestamping Authority TSANAME (-L list valid TSANAME)
 	-t TSAURL	location of the Timestamping Authority (for jarsigner)
 	-n		DO NOT use zipalign
 	-z ZIPALIGN	path to zipalign (auto detected in \$PATH)
@@ -145,7 +174,7 @@ main() {
 	local opt
 	local key
 	local cert
-	while getopts "a:hk:K:nt:vVz:" opt ; do
+	while getopts "a:hk:K:Lnt:T:vVz:" opt ; do
 		case "${opt}" in
 		a)
 			ALIGN="${OPTARG}"
@@ -156,11 +185,18 @@ main() {
 		K)
 			key="${OPTARG}"
 			;;
+		L)
+			listtsa
+			exit 0
+			;;
 		n)
 			ZIPALIGN=
 			;;
 		t)
 			TSAURL="${OPTARG}"
+			;;
+		T)
+			settsa "${OPTARG}"
 			;;
 		v)
 			cert=yes
