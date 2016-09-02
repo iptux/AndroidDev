@@ -17,7 +17,7 @@ readonly DEFAULTKEYSTORE=cert
 # http://timestamp.verisign.com
 # http://timestamp.digicert.com
 # https://tsa.safecreative.org/
-TSAURL="https://timestamp.geotrust.com/tsa"
+TSAURL=
 
 ZIPALIGN="`which zipalign`"
 ALIGN="4"
