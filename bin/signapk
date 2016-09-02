@@ -10,7 +10,7 @@
 
 
 readonly KEYSTOREDIR=~/.android/keystore
-readonly DEFAULTKEYSTORE=release
+readonly DEFAULTKEYSTORE=cert
 
 # Timestamping Authority
 # https://timestamp.geotrust.com/tsa
