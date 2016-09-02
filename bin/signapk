@@ -21,6 +21,7 @@ TSAURL=
 
 ZIPALIGN="`which zipalign`"
 ALIGN="4"
+VERBOSE=
 
 showerror() {
 	echo "$@" >&2
@@ -32,7 +33,7 @@ genkeypair() {
 	[ -e "${keystore}" ] && return
 
 	[ -d "`dirname ${keystore}`" ] || mkdir -p "`dirname ${keystore}`"
-	keytool -genkeypair \
+	keytool -genkeypair ${VERBOSE:+-v} \
 		-storepass "${STOREPASS}" \
 		-keystore "${keystore}" \
 		-keypass "${KEYPASS}" \
@@ -88,7 +89,7 @@ signapk() {
 	# remove signing info
 	zip -q -d "${unaligned}" "META-INF/*"
 
-	jarsigner \
+	jarsigner ${VERBOSE:+-verbose} \
 		-storepass "${STOREPASS}" \
 		-keystore "${KEYSTORE}" \
 		-keypass "${KEYPASS}" \
@@ -99,7 +100,7 @@ signapk() {
 		"${KEYALIAS}"
 
 	if [ -x "${ZIPALIGN}" ] ; then
-		"${ZIPALIGN}" -f -z "${ALIGN}" "${unaligned}" "${signed}"
+		"${ZIPALIGN}" -f ${VERBOSE:+-v} -z "${ALIGN}" "${unaligned}" "${signed}"
 		rm -f "${unaligned}"
 	else
 		mv -f "${unaligned}" "${signed}"
@@ -113,7 +114,7 @@ showcert() {
 	[ -e "${in}" ] || return 1
 
 	echo "${in}"
-	jarsigner -verify -certs "${in}"
+	jarsigner -verify ${VERBOSE:+-verbose} -certs "${in}"
 }
 
 showhelp() {
@@ -121,6 +122,7 @@ showhelp() {
 `basename $0`: signing a apk
 Usage: `basename $0` [options...] apk
 	-h		show this help
+	-V		be verbose
 	-v		show certificate details of a signed apk
 	-k KEYNAME	use keystore KEYNAME to sign apk
 			keystore files is stored in ${KEYSTOREDIR} directory
@@ -143,7 +145,7 @@ main() {
 	local opt
 	local key
 	local cert
-	while getopts "a:hk:K:nt:vz:" opt ; do
+	while getopts "a:hk:K:nt:vVz:" opt ; do
 		case "${opt}" in
 		a)
 			ALIGN="${OPTARG}"
@@ -162,6 +164,9 @@ main() {
 			;;
 		v)
 			cert=yes
+			;;
+		V)
+			VERBOSE=yes
 			;;
 		z)
 			ZIPALIGN="${OPTARG}"
