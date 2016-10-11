@@ -1,4 +1,4 @@
-# simple makefile for ANdroid project that use gradle
+# simple makefile for Android project that use gradle
 
 GRADLE := gradle
 
