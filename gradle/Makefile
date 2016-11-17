@@ -1,4 +1,14 @@
 # simple makefile for Android project that use gradle
+#
+# Copyright (c) 2016 Tommy Alex
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
 
 GRADLE := gradle
 
@@ -8,14 +18,14 @@ define GRADLE_TARGET
 # param: TARGET TASK MODULE
 ifeq (,$(strip $(3)))
 # project level target
+.PHONY: $(1)
 $(1):
 	$(GRADLE) $(2)
-.PHONY: $(1)
 else
 # module level target
+.PHONY: $(call module-name,$(3))-$(1)
 $(call module-name,$(3))-$(1):
 	$(GRADLE) :$(3):$(2)
-.PHONY: $(call module-name,$(3))-$(1)
 endif
 endef
 
