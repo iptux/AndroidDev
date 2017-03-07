@@ -1,4 +1,4 @@
 #!/bin/sh
-export GRADLE_HOME=/opt/android-studio/gradle/gradle-2.14.1
+export GRADLE_HOME=/opt/android-studio/gradle/gradle-3.2
 export PATH="${GRADLE_HOME}/bin:${PATH}"
 exec "${GRADLE_HOME}/bin/gradle" "$@"
