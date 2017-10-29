@@ -120,6 +120,7 @@ signapk() {
 		-storepass "${STOREPASS}" \
 		-keystore "${KEYSTORE}" \
 		-keypass "${KEYPASS}" \
+		-sigfile CERT \
 		-digestalg SHA1 \
 		-sigalg SHA1withRSA \
 		${TSAURL:+-tsa ${TSAURL}} \
