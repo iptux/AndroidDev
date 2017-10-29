@@ -141,7 +141,7 @@ showcert() {
 	[ -e "${in}" ] || return 1
 
 	echo "${in}"
-	jarsigner -verify ${VERBOSE:+-verbose} -certs "${in}"
+	jarsigner -verify ${VERBOSE:+-verbose:summary -certs} "${in}"
 }
 
 showhelp() {
