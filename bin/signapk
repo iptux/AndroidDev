@@ -60,15 +60,17 @@ genkeypair() {
 	[ -e "${keystore}" ] && return
 
 	[ -d "`dirname ${keystore}`" ] || mkdir -p "`dirname ${keystore}`"
+	export STOREPASS KEYPASS
 	keytool -genkeypair ${VERBOSE:+-v} \
-		-storepass "${STOREPASS}" \
+		-storepass:env STOREPASS \
 		-keystore "${keystore}" \
-		-keypass "${KEYPASS}" \
+		-keypass:env KEYPASS \
 		-alias "${KEYALIAS}" \
 		-dname "${CERTDNAME}" \
 		-validity 10000 \
 		-keysize 2048 \
 		-keyalg RSA
+	export -n STOREPASS KEYPASS
 }
 
 setkeystore() {
@@ -116,16 +118,18 @@ signapk() {
 	# remove signing info
 	zip -q -d "${unaligned}" "META-INF/*"
 
+	export STOREPASS KEYPASS
 	jarsigner ${VERBOSE:+-verbose} \
-		-storepass "${STOREPASS}" \
+		-storepass:env STOREPASS \
 		-keystore "${KEYSTORE}" \
-		-keypass "${KEYPASS}" \
+		-keypass:env KEYPASS \
 		-sigfile CERT \
 		-digestalg SHA1 \
 		-sigalg SHA1withRSA \
 		${TSAURL:+-tsa ${TSAURL}} \
 		"${unaligned}" \
 		"${KEYALIAS}"
+	export -n STOREPASS KEYPASS
 
 	if [ -x "${ZIPALIGN}" ] ; then
 		"${ZIPALIGN}" -f ${VERBOSE:+-v} -z "${ALIGN}" "${unaligned}" "${signed}"
